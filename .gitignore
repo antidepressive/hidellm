@@ -1,0 +1,13 @@
+# build output
+dist/
+
+# nothing here needs a package tree, but tooling sometimes creates one
+node_modules/
+package-lock.json
+
+# editors and OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

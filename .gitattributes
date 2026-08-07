@@ -1,0 +1,10 @@
+# Everything text is LF in the repository and LF in the working tree, so a
+# Windows checkout doesn't turn every file into a diff.
+* text=auto eol=lf
+
+*.png binary
+*.zip binary
+
+# Keep generated icons and screenshots out of diff and language stats
+icons/*.png binary linguist-generated=true
+docs/media/*.png binary linguist-generated=true

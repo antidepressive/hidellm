@@ -1,0 +1,33 @@
+{
+  "name": "hidellm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chrome extension that makes AI assistants look like an ordinary document.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antidepressive/HideLLM.git"
+  },
+  "homepage": "https://github.com/antidepressive/HideLLM",
+  "bugs": {
+    "url": "https://github.com/antidepressive/HideLLM/issues"
+  },
+  "keywords": [
+    "chrome-extension",
+    "privacy",
+    "manifest-v3",
+    "chatgpt",
+    "claude",
+    "gemini"
+  ],
+  "scripts": {
+    "test": "node test/run.js",
+    "lint": "node scripts/check.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "build": "node scripts/package.mjs",
+    "check": "npm run lint && npm test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

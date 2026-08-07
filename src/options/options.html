@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--
+  options.html: the full settings page (opened in a tab, not a dialog).
+  The popup covers the everyday controls; everything else lives here.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HideLLM Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <header class="page-head">
+    <div class="brand">
+      <!-- the shipped icon, not a redrawing of it: one file to change when the mark changes -->
+      <img class="brand-mark" src="../../icons/icon-128.png" alt="" width="40" height="40" />
+      <div>
+        <h1>Hide<span>LLM</span></h1>
+        <p class="tagline">Your assistant, wearing a suit.</p>
+      </div>
+    </div>
+    <span class="version" id="version"></span>
+  </header>
+
+  <div class="welcome" id="welcome" hidden>
+    <strong>You're set up.</strong>
+    Open ChatGPT, Claude or Gemini, click the HideLLM icon in your toolbar and flip the switch,
+    or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> from anywhere.
+  </div>
+
+  <main>
+    <section class="card">
+      <h2>Disguise</h2>
+      <p class="sub">Pick what the page should look like. Previews are rendered with the same code the page gets.</p>
+      <div class="theme-grid" id="themes" role="radiogroup" aria-label="Disguise"></div>
+    </section>
+
+    <section class="card">
+      <h2>Document</h2>
+      <div class="rows">
+        <label class="row">
+          <span class="row-copy">
+            <span class="row-title">Document name</span>
+            <span class="row-sub">Shown in the fake toolbar and used to build the tab title.</span>
+          </span>
+          <input id="docname" type="text" maxlength="80" spellcheck="false" autocomplete="off" />
+        </label>
+
+        <label class="row">
+          <span class="row-copy">
+            <span class="row-title">Tab title override</span>
+            <span class="row-sub">Leave empty to derive it from the document name, the way the real app does.</span>
+          </span>
+          <input id="title-override" type="text" maxlength="120" spellcheck="false" autocomplete="off" placeholder="Automatic" />
+        </label>
+
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Fake toolbar</span>
+            <span class="row-sub">Draw the application chrome across the top of the page.</span>
+          </span>
+          <label class="switch"><input type="checkbox" id="showChrome" /><span class="track"><span class="knob"></span></span></label>
+        </div>
+
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Fake tab title</span>
+            <span class="row-sub">Rewrite the browser tab's title while disguised.</span>
+          </span>
+          <label class="switch"><input type="checkbox" id="fakeTitle" /><span class="track"><span class="knob"></span></span></label>
+        </div>
+
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Fake favicon</span>
+            <span class="row-sub">Swap the tab icon for the disguised app's.</span>
+          </span>
+          <label class="switch"><input type="checkbox" id="fakeFavicon" /><span class="track"><span class="knob"></span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Behaviour</h2>
+      <div class="rows">
+        <div class="row row-stack">
+          <span class="row-copy">
+            <span class="row-title">Visible text</span>
+            <span class="row-sub" id="mode-hint"></span>
+          </span>
+          <div class="segmented" id="modes" role="radiogroup" aria-label="Visible text"></div>
+        </div>
+
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Apply to every open tab</span>
+            <span class="row-sub">Off: only the tab you're looking at when you flip the switch.</span>
+          </span>
+          <label class="switch"><input type="checkbox" id="applyToAllTabs" /><span class="track"><span class="knob"></span></span></label>
+        </div>
+
+        <label class="row">
+          <span class="row-copy">
+            <span class="row-title">Peek length</span>
+            <span class="row-sub">Seconds before a peek re-hides itself. 0 keeps the page revealed until you press the key again.</span>
+          </span>
+          <input id="peekSeconds" type="number" min="0" max="600" step="5" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Sites</h2>
+      <p class="sub">Turn off any site you'd rather leave alone. Sites marked experimental use generic rules and may not hide everything.</p>
+      <div class="rows" id="sites"></div>
+    </section>
+
+    <section class="card">
+      <h2>Keyboard</h2>
+      <div class="rows">
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Toggle the disguise</span>
+            <span class="row-sub">Works from any tab.</span>
+          </span>
+          <kbd id="key-toggle">Unset</kbd>
+        </div>
+        <div class="row">
+          <span class="row-copy">
+            <span class="row-title">Peek at the real page</span>
+            <span class="row-sub">Reveals the tab in front, then re-hides it.</span>
+          </span>
+          <kbd id="key-peek">Unset</kbd>
+        </div>
+      </div>
+      <button class="btn" id="shortcuts" type="button">Change shortcuts</button>
+    </section>
+
+    <section class="card">
+      <h2>Privacy</h2>
+      <p class="sub">
+        HideLLM makes no network requests of any kind: there is no backend, no analytics and no telemetry,
+        and the source contains no <code>fetch</code> call. Your settings are stored by Chrome and never leave
+        your browser profile. The extension can only run on the assistant sites listed above.
+      </p>
+      <p class="sub">
+        It is a visual disguise. The address bar, your browser history and the network traffic are untouched.
+        It defeats a glance over your shoulder, not an inspection.
+      </p>
+      <div class="links">
+        <a href="https://github.com/antidepressive/HideLLM" target="_blank" rel="noopener noreferrer">Source code</a>
+        <a href="https://github.com/antidepressive/HideLLM/issues/new/choose" target="_blank" rel="noopener noreferrer">Report a problem</a>
+        <a href="https://github.com/antidepressive/HideLLM/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy policy</a>
+      </div>
+      <button class="btn btn-quiet" id="reset" type="button">Reset all settings</button>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../core/ui.js"></script>
+  <script src="../core/themes.js"></script>
+  <script src="../core/sites.js"></script>
+  <script src="../core/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+name: Feature or disguise request
+description: Suggest a new disguise, a new site, or a change to how it works
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you write: this project won't add analytics, telemetry, network
+        calls of any kind, or dependencies for things that can be written in a
+        hundred lines. That's in [CONTRIBUTING.md](https://github.com/antidepressive/HideLLM/blob/main/CONTRIBUTING.md#scope).
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of request is this?
+      options:
+        - A new disguise (a different app to look like)
+        - A new site to support
+        - A change to existing behaviour
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like?
+      validations:
+        required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: What problem does it solve?
+      description: The situation you're in when you'd reach for this.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Would you like to build it?
+      description: Entirely optional. A "no" doesn't make the request less welcome.
+      options:
+        - label: I'd be happy to open a pull request for this

@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "HideLLM",
+  "version": "1.0.0",
+  "description": "Make ChatGPT, Claude, Gemini and others look like an ordinary document. No account, no tracking, no network calls.",
+  "homepage_url": "https://github.com/antidepressive/HideLLM",
+  "minimum_chrome_version": "102",
+  "action": {
+    "default_title": "HideLLM",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "toggle-disguise": {
+      "description": "Turn the disguise on or off",
+      "suggested_key": {
+        "default": "Ctrl+Shift+Z",
+        "mac": "MacCtrl+Shift+Z"
+      }
+    },
+    "toggle-peek": {
+      "description": "Peek at the real page, then hide it again",
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "MacCtrl+Shift+X"
+      }
+    }
+  },
+  "permissions": [
+    "scripting",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://*.chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://*.chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://*.claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://*.gemini.google.com/*",
+    "https://grok.com/*",
+    "https://*.grok.com/*",
+    "https://perplexity.ai/*",
+    "https://*.perplexity.ai/*",
+    "https://chat.deepseek.com/*",
+    "https://*.chat.deepseek.com/*",
+    "https://copilot.microsoft.com/*",
+    "https://*.copilot.microsoft.com/*"
+  ]
+}

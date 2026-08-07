@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+  popup.html: the panel behind the toolbar icon.
+
+  Structure, top to bottom: brand header, status + master switch, a live preview of
+  the selected theme, the theme picker, document name, visibility mode, peek, and a
+  footer with the hotkeys.
+
+  Behaviour is popup.js and styling is popup.css; ids here are the contract between
+  them. The theme list, the preview and the visibility modes are all built at
+  runtime from the shared core modules, so this file holds no theme data.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HideLLM</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <!-- the shipped icon, not a redrawing of it: one file to change when the mark changes -->
+      <img class="brand-mark" src="../../icons/icon-128.png" alt="" width="26" height="26" />
+      <h1>Hide<span>LLM</span></h1>
+    </div>
+    <button id="open-options" class="icon-btn" type="button" title="All settings" aria-label="All settings">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+    </button>
+  </header>
+
+  <main>
+    <!-- master switch + what it's doing right now -->
+    <section class="panel switch-panel" id="switch-panel">
+      <div class="switch-copy">
+        <span class="switch-title" id="state-title">Disguise off</span>
+        <span class="switch-sub" id="state-sub">Checking this tab…</span>
+      </div>
+      <label class="switch" title="Toggle the disguise">
+        <input type="checkbox" id="master" aria-label="Enable the disguise" />
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </section>
+
+    <!-- live preview of the selected disguise, rendered from the real theme code -->
+    <section class="block">
+      <div class="block-head">
+        <span class="block-title">Disguise</span>
+        <span class="block-note" id="theme-note"></span>
+      </div>
+      <div class="preview" id="preview" aria-hidden="true"></div>
+      <div class="chips" id="themes" role="radiogroup" aria-label="Disguise"></div>
+    </section>
+
+    <!-- document name: drives both the tab title and the name in the fake toolbar -->
+    <section class="block">
+      <label class="field">
+        <span class="field-label" for="docname">Document name</span>
+        <input id="docname" type="text" spellcheck="false" autocomplete="off" maxlength="80" />
+      </label>
+    </section>
+
+    <!-- how much of the conversation stays readable -->
+    <section class="block">
+      <div class="block-head">
+        <span class="block-title">Visible text</span>
+      </div>
+      <div class="segmented" id="modes" role="radiogroup" aria-label="Visible text"></div>
+      <p class="hint" id="mode-hint"></p>
+    </section>
+
+    <button id="peek" class="ghost-btn" type="button">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+      <span id="peek-label">Peek at the real page</span>
+      <kbd id="peek-key">Ctrl+Shift+X</kbd>
+    </button>
+  </main>
+
+  <footer class="footer">
+    <span class="footer-keys">Toggle <kbd id="toggle-key">Ctrl+Shift+Z</kbd></span>
+    <a class="footer-link" id="repo" href="https://github.com/antidepressive/HideLLM" target="_blank" rel="noopener noreferrer">
+      GitHub
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 17 17 7M9 7h8v8" />
+      </svg>
+    </a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- core modules first: they publish the shared HL namespace popup.js reads -->
+  <script src="../core/ui.js"></script>
+  <script src="../core/themes.js"></script>
+  <script src="../core/sites.js"></script>
+  <script src="../core/settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: lint and test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # the extension is dependency-free; this just proves the tooling scripts
+        # run on the versions contributors are likely to have
+        node: ['18', '20', '22']
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+  package:
+    name: package
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Build the Web Store zip
+        run: npm run build
+
+      # Only that the generator still runs, and not that its output is byte-identical.
+      # zlib's deflate output varies between Node builds, so comparing the PNGs
+      # would fail for reasons that have nothing to do with the icons.
+      - name: Check the icon generator still works
+        run: npm run icons
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: hidellm-unpacked
+          path: |
+            manifest.json
+            src/
+            icons/*.png
+            LICENSE
+          if-no-files-found: error
